@@ -8,6 +8,7 @@ const generarJWT = (uid, name) => {
       process.env.SECRET_JWT_SEED,
       {
         expiresIn: "24h",
+        algorithm: "HS256",
       },
       (err, token) => {
         if (err) {

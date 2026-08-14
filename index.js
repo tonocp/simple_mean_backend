@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 
 const { dbConnection } = require("./db/config");
 require("dotenv").config();
@@ -13,13 +12,15 @@ const app = express();
 
 dbConnection();
 
-// Directorio Público
-
-app.use(express.static("public"));
-
 // CORS
 
-app.use(cors());
+const corsOrigin = process.env.CORS_ORIGIN;
+
+app.use(
+  cors({
+    origin: corsOrigin ? corsOrigin.split(",") : true,
+  })
+);
 
 // Lectura y parseo del body
 
@@ -28,11 +29,10 @@ app.use(express.json());
 // Rutas
 
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/heroes", require("./routes/heroes"));
 
-// Resto de rutas
-
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "public/index.html"));
+app.get("/", (req, res) => {
+  res.json({ ok: true, service: "simple_mean_backend" });
 });
 
 app.listen(process.env.PORT, () => {
