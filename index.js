@@ -18,7 +18,7 @@ const corsOrigin = process.env.CORS_ORIGIN;
 
 app.use(
   cors({
-    origin: corsOrigin ? corsOrigin.split(",") : true,
+    origin: !corsOrigin || corsOrigin === "*" ? true : corsOrigin.split(","),
   })
 );
 
@@ -30,6 +30,7 @@ app.use(express.json());
 
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/heroes", require("./routes/heroes"));
+app.use("/api/graficas", require("./routes/graficas"));
 
 app.get("/", (req, res) => {
   res.json({ ok: true, service: "simple_mean_backend" });
