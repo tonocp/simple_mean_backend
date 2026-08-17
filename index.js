@@ -16,9 +16,17 @@ dbConnection();
 
 const corsOrigin = process.env.CORS_ORIGIN;
 
+// Tolera espacios tras la coma y barras finales al copiar/pegar URLs
+// (el header Origin del navegador nunca lleva barra final).
+const parseCorsOrigins = (value) =>
+  value
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/+$/, ""))
+    .filter(Boolean);
+
 app.use(
   cors({
-    origin: !corsOrigin || corsOrigin === "*" ? true : corsOrigin.split(","),
+    origin: !corsOrigin || corsOrigin === "*" ? true : parseCorsOrigins(corsOrigin),
   })
 );
 
